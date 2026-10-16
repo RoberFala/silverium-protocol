@@ -1,0 +1,20 @@
+{
+  "overview": "Silverium Protocol (SPR) is a cyberpunk-styled DePIN dashboard where you connect a wallet, manage SPR Energy, recharge it, and spend it on AI tasks.",
+  "features": [
+    "Connect an Ethereum, BNB Chain or Solana wallet and see its short address",
+    "See your available SPR Energy balance in a central panel",
+    "Recharge 10 SPR of Energy by choosing a payment method",
+    "Run an AI task that spends 1 SPR and returns a knowledge contribution",
+    "Watch a live status log of every recharge and spend",
+    "Cyberpunk dark theme with neon green and cyan accents"
+  ],
+  "category": "web3-dashboard",
+  "tags": [
+    "cyberpunk",
+    "depin",
+    "web3",
+    "energy",
+    "ai"
+  ],
+  "last_updated": "2026-10-16T02:05:00.858Z"
+}

@@ -1,0 +1,103 @@
+type WalletAddress = text;
+type Value = 
+ variant {
+   "bool": bool;
+   float: float64;
+   "int": int;
+   "nat": nat;
+   "null";
+   "text": text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type Timestamp = int;
+type Result__1 = 
+ variant {
+   err: Error;
+   ok;
+ };
+type Result = 
+ record {
+   hasMore: bool;
+   rows: vec vec Cell;
+ };
+type Error = 
+ variant {
+   AmbiguousAttribute: record {
+                         field: text;
+                         sources: vec text;
+                       };
+   FrontendOriginMismatch: record {
+                             expected: vec text;
+                             got: text;
+                           };
+   FrontendOriginsNotConfigured;
+   MalformedCandid;
+   MissingField: text;
+   MixedSsoSources: record {
+                      otherKeys: vec text;
+                      ssoKeys: vec text;
+                    };
+   NoAttributes;
+   Stale: record {ageNs: nat;};
+   UnknownNonce;
+   UntrustedSsoSource: record {domain: text;};
+ };
+type EnergyTxKind = 
+ variant {
+   recharge;
+   spend;
+ };
+type EnergyTx = 
+ record {
+   amount: nat;
+   balanceAfter: nat;
+   kind: EnergyTxKind;
+   timestamp: Timestamp;
+ };
+type EnergyError = variant {
+                     insufficientBalance:
+                      record {
+                        available: nat;
+                        required: nat;
+                      };};
+type Cell = 
+ record {
+   name: text;
+   value: Value;
+ };
+type AiTaskResult = 
+ record {
+   balanceAfter: nat;
+   contribution: text;
+ };
+service : {
+  _initialize_access_control: () -> ();
+  _internet_identity_sign_in_finish: () -> (Result__1);
+  _internet_identity_sign_in_start: () -> (blob);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  execute: (qJson: text) -> (Result) query;
+  /// Static Markdown documentation of the Silverium Protocol (SPR) backend API.
+  getApiDoc: () -> (text) query;
+  getCallerUserRole: () -> (UserRole) query;
+  /// Read the current SPR Energy balance for a wallet (0 when unknown).
+  getEnergyBalance: (wallet: WalletAddress) -> (nat) query;
+  /// Return the SPR Energy ledger for a wallet, newest first.
+  getEnergyHistory: (wallet: WalletAddress) -> (vec EnergyTx) query;
+  isCallerAdmin: () -> (bool) query;
+  /// Credit exactly 10 SPR Energy to a wallet and return the new balance.
+  rechargeEnergy: (wallet: WalletAddress) -> (nat);
+  /// Spend exactly 1 SPR Energy to run an AI knowledge task, returning the
+  /// generated contribution and the resulting balance, or an error when the
+  /// balance is zero.
+  runAiTask: (wallet: WalletAddress) ->
+   (variant {
+      err: EnergyError;
+      ok: AiTaskResult;
+    });
+  schema: () -> (text) query;
+}
